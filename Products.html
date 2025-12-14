@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - LUXE Fashion</title>
+
+    <script>
+        const CONFIG = {
+            API_URL: 'api/products/get.php',
+            OFFLINE_MODE: 0
+        };
+    </script>
+
+    <link rel="stylesheet" href="css/Navbar.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/Products.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body data-page="products">
+
+    <header id="main-header">
+        <div class="container">
+            <div class="logo" data-link="index.html">
+                <i class="fas fa-crown"></i>
+                <span>LUXE</span>
+            </div>
+
+            <nav id="navbar-links">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="Products.html" class="active">Products</a></li>
+                    <li><a href="LogIn.html" id="login-link">Login</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <div class="cart-icon" data-link="Cart.html">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" id="products-page">
+        <div class="page-header">
+            <h1>Our Collection</h1>
+            <p>Explore our premium selection of fashion items</p>
+        </div>
+
+        <div class="filters-section">
+            <div class="filter-group">
+                <label>Search:</label>
+                <input type="text" id="search-input" placeholder="Search products...">
+            </div>
+
+            <div class="filter-group">
+                <label>Category:</label>
+                <select id="category-filter">
+                    <option value="all">All Categories</option>
+                    <option value="men">Men</option>
+                    <option value="women">Women</option>
+                    <option value="accessories">Accessories</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Sort By:</label>
+                <select id="sort-filter">
+                    <option value="default">Default</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="newest">Newest Arrivals</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="products-grid">
+            <div class="loading-message">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading collection from database...</p>
+            </div>
+        </div>
+
+        <div class="pagination" style="display:none;">
+            <button class="prev-page" disabled><i class="fas fa-chevron-left"></i></button>
+            <div class="page-numbers">
+                <span class="current-page">1</span>
+            </div>
+            <button class="next-page"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <footer id="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-crown"></i>
+                        <span>LUXE</span>
+                    </div>
+                    <p>Premium fashion for the modern individual. Quality, style, and elegance in every piece.</p>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="Products.html">Shop</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> +1 234 567 890</p>
+                        <p><i class="fas fa-envelope"></i> info@luxe.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Fashion Street, New York, USA</p>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 LUXE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/ALL.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('lux_user'));
+            const loginLink = document.getElementById('login-link');
+            const cartIcon = document.querySelector('.cart-icon');
+            const cartCountEl = document.querySelector('.cart-count');
+
+            // تحديث الهيدر حسب تسجيل الدخول
+            if (user) {
+                loginLink.style.display = 'none';
+                const nav = document.querySelector('#navbar-links ul');
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#" id="logout-btn">Hello, ${user.name} (Logout)</a>`;
+                nav.appendChild(li);
+
+                document.getElementById('logout-btn').addEventListener('click', () => {
+                    localStorage.removeItem('lux_user');
+                    window.location.reload();
+                });
+
+                // تحديث عداد الـ Cart
+                fetch(`api/cart/get.php?user_id=${user.id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            cartCountEl.textContent = data.data.reduce((sum, item) => sum + item.quantity, 0);
+                        }
+                    });
+            } else {
+                cartIcon.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('Please login first!');
+                    window.location.href = 'LogIn.html';
+                });
+            }
+
+            // ---- منتجات
+            const productsGrid = document.querySelector('.products-grid');
+            const searchInput = document.getElementById('search-input');
+            const categoryFilter = document.getElementById('category-filter');
+            const sortFilter = document.getElementById('sort-filter');
+            const pagination = document.querySelector('.pagination');
+            const prevPageBtn = pagination.querySelector('.prev-page');
+            const nextPageBtn = pagination.querySelector('.next-page');
+            const pageNumber = pagination.querySelector('.current-page');
+
+            const PRODUCTS_PER_PAGE = 8;
+            let allProducts = [];
+            let filteredProducts = [];
+            let currentPage = 1;
+
+            async function loadProducts() {
+                try {
+                    productsGrid.innerHTML = `<div class="loading-message">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading collection from database...</p>
+                    </div>`;
+
+                    const response = await fetch(CONFIG.API_URL);
+                    if (!response.ok) throw new Error('Failed to fetch products');
+
+                    const data = await response.json();
+                    if (!data.success) throw new Error(data.message || 'Error fetching products');
+
+                    allProducts = data.products || [];
+                    filteredProducts = [...allProducts];
+                    applyFilters();
+                } catch (err) {
+                    productsGrid.innerHTML = `<p style="color:red;">Error loading products: ${err.message}</p>`;
+                }
+            }
+
+            function applyFilters() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const category = categoryFilter.value;
+                const sortBy = sortFilter.value;
+
+                filteredProducts = allProducts.filter(product => {
+                    return (product.name.toLowerCase().includes(searchTerm)) &&
+                        (category === 'all' || product.category === category);
+                });
+
+                if (sortBy === 'price-low') filteredProducts.sort((a, b) => a.price - b.price);
+                if (sortBy === 'price-high') filteredProducts.sort((a, b) => b.price - a.price);
+                if (sortBy === 'newest') filteredProducts.sort((a, b) => b.id - a.id);
+
+                currentPage = 1;
+                renderProducts();
+            }
+
+            searchInput.addEventListener('input', () => setTimeout(applyFilters, 300));
+            categoryFilter.addEventListener('change', applyFilters);
+            sortFilter.addEventListener('change', applyFilters);
+
+            function renderProducts() {
+                const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
+                const end = start + PRODUCTS_PER_PAGE;
+                const pageProducts = filteredProducts.slice(start, end);
+
+                if (!pageProducts.length) {
+                    productsGrid.innerHTML = `<p>No products found.</p>`;
+                    pagination.style.display = 'none';
+                    return;
+                }
+
+                productsGrid.innerHTML = pageProducts.map(p => `
+                    <div class="product-card">
+                        <div class="product-clickable" onclick="window.location.href='ProductDetail.html?id=${p.id}'">
+                            <img src="${p.image || 'images/placeholder.png'}" alt="${p.name}">
+                            <h3>${p.name}</h3>
+                            <p>$${parseFloat(p.price).toFixed(2)}</p>
+                        </div>
+                        <button class="btn-add-to-cart" data-id="${p.id}">Add to Cart</button>
+                    </div>
+                `).join('');
+
+                pagination.style.display = filteredProducts.length > PRODUCTS_PER_PAGE ? 'flex' : 'none';
+                pageNumber.textContent = currentPage;
+                prevPageBtn.disabled = currentPage === 1;
+                nextPageBtn.disabled = currentPage >= Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+
+                attachAddToCartEvents();
+            }
+
+            prevPageBtn.addEventListener('click', () => { currentPage--; renderProducts(); });
+            nextPageBtn.addEventListener('click', () => { currentPage++; renderProducts(); });
+
+            function attachAddToCartEvents() {
+                document.querySelectorAll('.btn-add-to-cart').forEach(btn => {
+                    btn.onclick = async (e) => {
+                        e.stopPropagation();
+
+                        if (!user) {
+                            alert('Please login first to add items to cart.');
+                            window.location.href = 'LogIn.html';
+                            return;
+                        }
+
+                        const id = parseInt(btn.dataset.id);
+                        try {
+                            const res = await fetch('api/cart/add.php', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ user_id: user.id, product_id: id, quantity: 1 })
+                            });
+                            const data = await res.json();
+                            if (!data.success) alert('Failed to add to cart: ' + (data.message || 'Unknown'));
+                            else {
+                                alert('Product added to cart!');
+                                cartCountEl.textContent = parseInt(cartCountEl.textContent) + 1;
+                            }
+                        } catch (err) {
+                            console.error(err);
+                            alert('Error adding product to cart.');
+                        }
+                    };
+                });
+            }
+
+            loadProducts();
+        });
+    </script>
+</body>
+
+</html>

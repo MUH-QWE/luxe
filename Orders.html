@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Orders</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body data-page="orders">
+
+<div class="container">
+    <h1>My Orders</h1>
+    <div id="orders-container"></div>
+</div>
+
+<script src="js/ALL.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    if (!LuxeApp.state.user) {
+        window.location.href = 'LogIn.html';
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            `api/orders/get_user_orders.php?user_id=${LuxeApp.state.user.id}`
+        );
+        const data = await res.json();
+
+        const container = document.getElementById('orders-container');
+
+        if (!data.success || data.orders.length === 0) {
+            container.innerHTML = '<p>No orders yet.</p>';
+            return;
+        }
+
+        data.orders.forEach(order => {
+            const div = document.createElement('div');
+            div.className = 'order-box';
+            div.innerHTML = `
+                <h3>Order #${order.order_number}</h3>
+                <p>Status: <b>${order.status}</b></p>
+                <p>Total: <b>$${order.total_amount}</b></p>
+
+                <ul>
+                    ${order.items.map(item => `
+                        <li>
+                            ${item.product_name} 
+                            (x${item.quantity}) - $${item.total_price}
+                        </li>
+                    `).join('')}
+                </ul>
+                <hr>
+            `;
+            container.appendChild(div);
+        });
+    } catch (err) {
+        console.error(err);
+        alert('Failed to load orders');
+    }
+});
+</script>
+</body>
+</html>

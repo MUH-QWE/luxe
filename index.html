@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUXE - Premium Fashion Store</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/App.css">
+    <link rel="stylesheet" href="css/Home.css">
+    <link rel="stylesheet" href="css/Modal.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800&family=Exo+2:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+</head>
+
+<body data-page="home">
+
+    <header id="main-header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fas fa-crown"></i><span>LUXE</span>
+                </a>
+            </div>
+            <nav id="navbar-links">
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="Products.html">Products</a></li>
+                    <li><a href="LogIn.html" id="login-link">Login</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="cart-icon">
+                    <a href="Cart.html">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Welcome to LUXE</h1>
+                <p>Discover the latest collections of premium fashion for men and women with modern style and elegance
+                </p>
+                <button class="btn-hero" data-link="Products.html">Explore Products</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose LUXE</h2>
+                <p>Experience the difference with our premium services</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-gem"></i></div>
+                    <h3>Premium Quality</h3>
+                    <p>Only the finest materials and craftsmanship in every piece we offer.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-shipping-fast"></i></div>
+                    <h3>Fast & Free Shipping</h3>
+                    <p>Free shipping on orders over $100 with express delivery options available.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Secure Shopping</h3>
+                    <p>Your data is protected with 256-bit SSL encryption and secure payment processing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                    <h3>24/7 Support</h3>
+                    <p>Our dedicated customer service team is always here to help you.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Best Selling Products</h2>
+                <p>Top picks loved by our customers</p>
+            </div>
+            <div class="products-grid" id="products-grid">
+                <div class="loading-products">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading products...</p>
+                </div>
+            </div>
+            <div class="section-footer">
+                <a href="Products.html" class="btn-view-all">View All Products</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section id="newsletter-section">
+        <div class="container">
+            <div class="newsletter-content">
+                <h2>Stay Updated</h2>
+                <p>Subscribe to our newsletter and get 10% off your first order</p>
+                <form class="newsletter-form" id="newsletter-form">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit"><i class="fas fa-paper-plane"></i> Subscribe</button>
+                </form>
+                <p class="privacy-note">
+                    By subscribing, you agree to our <a href="#">Privacy Policy</a>.
+                    You can unsubscribe at any time.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-crown"></i>
+                        <span>LUXE</span>
+                    </div>
+                    <p>Premium fashion for the modern individual. Quality, style, and elegance in every piece.</p>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="Products.html">Shop</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> +1 234 567 890</p>
+                        <p><i class="fas fa-envelope"></i> info@luxe.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Fashion Street, New York, USA</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 LUXE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/ALL.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('lux_user'));
+
+            // Update header links
+            const loginLink = document.getElementById('login-link');
+            if (user) {
+                loginLink.style.display = 'none';
+                const nav = document.querySelector('#navbar-links ul');
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#" id="logout-btn">Hello, ${user.name} (Logout)</a>`;
+                nav.appendChild(li);
+
+                document.getElementById('logout-btn').addEventListener('click', () => {
+                    localStorage.removeItem('lux_user');
+                    window.location.reload();
+                });
+            }
+
+            // Update cart count
+            if (user) {
+                fetch(`api/cart/get.php?user_id=${user.id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            const count = data.data.reduce((sum, item) => sum + item.quantity, 0);
+                            const cartCountEl = document.getElementById('cart-count');
+                            if (cartCountEl) cartCountEl.textContent = count;
+                        }
+                    }).catch(err => console.error('Cart fetch error:', err));
+            }
+
+            // Load products
+            async function loadProducts(sectionId, apiUrl) {
+                const container = document.getElementById(sectionId);
+                if (!container) return;
+
+                container.innerHTML = `<div class="loading-products"><i class="fas fa-spinner fa-spin"></i><p>Loading products...</p></div>`;
+
+                try {
+                    const res = await fetch(apiUrl);
+                    const data = await res.json();
+
+                    if (!data.success || !data.data?.length) {
+                        container.innerHTML = '<p>No products found.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = data.data.map(p => `
+                        <div class="product-card" data-link="ProductDetail.html?id=${p.id}">
+                            <img src="${p.images?.split(',')[0] || 'images/default-product.jpg'}" alt="${p.name}">
+                            <h3>${p.name}</h3>
+                            <p>$${parseFloat(p.price).toFixed(2)}</p>
+                        </div>
+                    `).join('');
+
+                } catch (err) {
+                    console.error('Products fetch error:', err);
+                    container.innerHTML = `<p style="color:red;">Failed to load products.</p>`;
+                }
+            }
+
+            loadProducts('products-grid', 'api/products/get.php');
+        });
+    </script>
+
+</body>
+</html>

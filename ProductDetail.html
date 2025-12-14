@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - LUXE Fashion</title>
+
+    <script>
+        const CONFIG = {
+            API_PRODUCT_URL: 'api/products/get_single.php',
+            API_RELATED_URL: 'api/products/get.php',
+            API_CART_ADD: 'api/cart/add.php',
+            API_WISHLIST_ADD: 'api/wishlist/add.php',
+            OFFLINE_MODE: 0
+        };
+    </script>
+
+    <link rel="stylesheet" href="css/Navbar.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ProductDetail.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body data-page="product-detail">
+
+    <header id="main-header">
+        <div class="container">
+            <div class="logo" data-link="index.html">
+                <i class="fas fa-crown"></i>
+                <span>LUXE</span>
+            </div>
+            <nav id="navbar-links">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="Products.html" class="active">Products</a></li>
+                    <li><a href="LogIn.html">Login</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="cart-icon" data-link="Cart.html">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" id="product-detail-page">
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> <i class="fas fa-chevron-right"></i>
+            <a href="Products.html">Shop</a> <i class="fas fa-chevron-right"></i>
+            <span id="breadcrumb-name">Loading...</span>
+        </div>
+
+        <div class="product-detail-content">
+            <div class="product-images">
+                <div class="main-image-container">
+                    <img id="main-img" class="main-image" src="" alt="Product Image">
+                </div>
+                <div class="image-thumbnails" id="thumbnails"></div>
+            </div>
+
+            <div class="product-info">
+                <h1 id="product-title" class="product-title">Loading Product...</h1>
+                <div class="product-meta">
+                    <span id="product-category" class="category-tag">Category</span>
+                    <span id="product-rating" class="rating-text">★★★★☆</span>
+                </div>
+                <div class="product-price">
+                    <span id="product-price" class="current-price">...</span>
+                    <span class="original-price">...</span>
+                    <span class="discount">-20%</span>
+                </div>
+                <p id="product-description" class="product-description">Fetching details...</p>
+
+                <div class="product-options">
+                    <div class="option-group">
+                        <label>Size:</label>
+                        <div class="size-selector" id="size-selector"></div>
+                    </div>
+                    <div class="option-group">
+                        <label>Quantity:</label>
+                        <div class="quantity-selector">
+                            <button class="qty-btn" id="minus">-</button>
+                            <input type="number" id="quantity" value="1" min="1">
+                            <button class="qty-btn" id="plus">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-actions">
+                    <button class="btn-add-to-cart" id="btn-add-to-cart">Add to Cart</button>
+                    <button class="btn-wishlist" id="btn-wishlist"><i class="fas fa-heart"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="related-products">
+            <h2>Related Products</h2>
+            <div class="products-grid" id="related-products-grid"></div>
+        </div>
+    </div>
+
+    <footer id="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-crown"></i>
+                        <span>LUXE</span>
+                    </div>
+                    <p>Premium fashion for the modern individual. Quality, style, and elegance in every piece.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="Products.html">Shop</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> +1 234 567 890</p>
+                        <p><i class="fas fa-envelope"></i> info@luxe.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Fashion Street, New York, USA</p>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LUXE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/ALL.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+
+            // ======== User & Header Handling ========
+            const user = JSON.parse(localStorage.getItem('lux_user'));
+            const loginLink = document.querySelector('#navbar-links a[href="LogIn.html"]');
+            const nav = document.querySelector('#navbar-links ul');
+            const cartIcon = document.querySelector('.cart-icon');
+            const cartCountEl = document.querySelector('.cart-count');
+
+            if (user) {
+                loginLink.style.display = 'none';
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#" id="logout-btn">Hello, ${user.name} (Logout)</a>`;
+                nav.appendChild(li);
+
+                document.getElementById('logout-btn').addEventListener('click', () => {
+                    localStorage.removeItem('lux_user');
+                    window.location.reload();
+                });
+
+                // Update cart count
+                fetch(`api/cart/get.php?user_id=${user.id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) cartCountEl.textContent = data.data.reduce((sum, item) => sum + item.quantity, 0);
+                    });
+            } else {
+                cartIcon.addEventListener('click', e => {
+                    e.preventDefault();
+                    alert('Please login first!');
+                    window.location.href = 'LogIn.html';
+                });
+            }
+
+            // ======== Product Detail ========
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get('id');
+
+            const mainImg = document.getElementById('main-img');
+            const thumbnails = document.getElementById('thumbnails');
+            const titleEl = document.getElementById('product-title');
+            const categoryEl = document.getElementById('product-category');
+            const priceEl = document.getElementById('product-price');
+            const descriptionEl = document.getElementById('product-description');
+            const sizeSelector = document.getElementById('size-selector');
+            const breadcrumbName = document.getElementById('breadcrumb-name');
+            const btnAddToCart = document.getElementById('btn-add-to-cart');
+            const btnWishlist = document.getElementById('btn-wishlist');
+            const quantityInput = document.getElementById('quantity');
+            const plusBtn = document.getElementById('plus');
+            const minusBtn = document.getElementById('minus');
+
+            function updateQuantity(delta) {
+                let qty = parseInt(quantityInput.value) || 1;
+                qty += delta;
+                if (qty < 1) qty = 1;
+                quantityInput.value = qty;
+            }
+
+            plusBtn.addEventListener('click', () => updateQuantity(1));
+            minusBtn.addEventListener('click', () => updateQuantity(-1));
+
+            async function fetchProduct() {
+                try {
+                    const res = await fetch(`${CONFIG.API_PRODUCT_URL}?id=${productId}`);
+                    const data = await res.json();
+                    if (!data.success) throw new Error(data.message || 'Failed to fetch product');
+
+                    const product = data.product;
+                    titleEl.textContent = product.name;
+                    categoryEl.textContent = product.category;
+                    priceEl.textContent = `$${parseFloat(product.price).toFixed(2)}`;
+                    descriptionEl.textContent = product.description;
+                    breadcrumbName.textContent = product.name;
+                    mainImg.src = product.image || 'images/placeholder.png';
+                    const sizes = product.sizes || ['S', 'M', 'L', 'XL'];
+                    sizeSelector.innerHTML = sizes.map(s => `<button class="size-btn" data-size="${s}">${s}</button>`).join('');
+                    sizeSelector.querySelectorAll('.size-btn')[0].classList.add('active');
+                    thumbnails.innerHTML = `<img class="thumb" src="${product.image}" alt="${product.name}">`;
+
+                } catch (err) {
+                    console.error(err);
+                    titleEl.textContent = 'Product not found';
+                    descriptionEl.textContent = err.message;
+                }
+            }
+
+            async function fetchRelatedProducts() {
+                try {
+                    const res = await fetch(CONFIG.API_RELATED_URL);
+                    const data = await res.json();
+                    if (!data.success) return;
+                    const productsGrid = document.getElementById('related-products-grid');
+                    const related = data.products.filter(p => p.id != productId).slice(0, 4);
+                    productsGrid.innerHTML = related.map(p => `
+                        <div class="product-card">
+                            <div class="product-clickable" onclick="window.location.href='ProductDetail.html?id=${p.id}'">
+                                <img src="${p.image || 'images/placeholder.png'}" alt="${p.name}">
+                                <h3>${p.name}</h3>
+                                <p>$${parseFloat(p.price).toFixed(2)}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                } catch (err) { console.error(err); }
+            }
+
+            // ======== Add to Cart ========
+            btnAddToCart.addEventListener('click', async () => {
+                if (!user) { alert('Please login first!'); window.location.href = 'LogIn.html'; return; }
+                try {
+                    const sizeBtn = sizeSelector.querySelector('.size-btn.active');
+                    const size = sizeBtn?.dataset.size || 'M';
+                    const quantity = parseInt(quantityInput.value) || 1;
+
+                    const res = await fetch(CONFIG.API_CART_ADD, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ user_id: user.id, product_id: productId, quantity, size })
+                    });
+                    const data = await res.json();
+                    if (!data.success) alert(data.message || 'Failed to add to cart');
+                    else alert('Product added to cart!');
+                    // Update cart count
+                    fetch(`api/cart/get.php?user_id=${user.id}`)
+                        .then(res => res.json())
+                        .then(data => { if(data.success) cartCountEl.textContent = data.data.reduce((sum,item)=>sum+item.quantity,0); });
+                } catch (err) { console.error(err); alert('Error adding product to cart'); }
+            });
+
+            // ======== Wishlist ========
+            btnWishlist.addEventListener('click', async () => {
+                if (!user) { alert('Please login first!'); window.location.href = 'LogIn.html'; return; }
+                try {
+                    const res = await fetch(CONFIG.API_WISHLIST_ADD, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ user_id: user.id, product_id: productId })
+                    });
+                    const data = await res.json();
+                    if (!data.success) alert(data.message || 'Failed to add to wishlist');
+                    else alert('Added to wishlist!');
+                } catch (err) { console.error(err); alert('Error adding to wishlist'); }
+            });
+
+            thumbnails.addEventListener('click', e => {
+                if (e.target.tagName === 'IMG') mainImg.src = e.target.src;
+            });
+
+            document.querySelectorAll('[data-link]').forEach(el => {
+                el.addEventListener('click', () => {
+                    const url = el.getAttribute('data-link');
+                    if (url) window.location.href = url;
+                });
+            });
+
+            await fetchProduct();
+            await fetchRelatedProducts();
+        });
+    </script>
+</body>
+</html>

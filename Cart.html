@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping Cart - LUXE Fashion</title>
+    <link rel="stylesheet" href="css/Navbar.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/Cart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body data-page="cart">
+
+    <header id="main-header">
+        <div class="container">
+            <div class="logo" data-link="index.html">
+                <i class="fas fa-crown"></i>
+                <span>LUXE</span>
+            </div>
+            <nav id="navbar-links">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="Products.html">Products</a></li>
+                    <li><a href="LogIn.html">Login</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="cart-icon" data-link="Cart.html">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    <br><br><br>
+
+    <div class="container" id="cart-page">
+        <div class="cart-header">
+            <h1>Your Shopping Cart</h1>
+            <button class="clear-cart-btn" data-action="clear-cart">
+                <i class="fas fa-trash"></i> Clear Cart
+            </button>
+        </div>
+
+        <div class="cart-content">
+            <div class="cart-items-section" id="cart-items-container">
+                <div class="empty-cart-message">
+                    <i class="fas fa-shopping-basket"></i>
+                    <p>Your cart is currently empty.</p>
+                    <a href="Products.html" class="btn-primary">Start Shopping</a>
+                </div>
+            </div>
+
+            <div class="cart-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotal">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span id="shipping">$0.00</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="total">$0.00</span>
+                </div>
+
+                <button id="checkout-btn" class="btn-primary" data-link="Checkout.html">
+                    Proceed to Checkout
+                </button>
+
+                <div class="security-notice">
+                    <i class="fas fa-lock"></i>
+                    <div>
+                        <h4>Secure Checkout</h4>
+                        <p>Your transaction is protected</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo"><i class="fas fa-crown"></i><span>LUXE</span></div>
+                    <p>Premium fashion for the modern individual. Quality, style, and elegance in every piece.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="Products.html">Shop</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> +1 234 567 890</p>
+                        <p><i class="fas fa-envelope"></i> info@luxe.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Fashion Street, New York, USA</p>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LUXE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/ALL.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // ======= Check User =======
+            const user = JSON.parse(localStorage.getItem('lux_user'));
+            const loginLink = document.querySelector('#navbar-links a[href="LogIn.html"]');
+            const nav = document.querySelector('#navbar-links ul');
+            const cartIcon = document.querySelector('.cart-icon');
+            const cartCountEl = document.getElementById('cart-count');
+
+            if (!user) {
+                alert('Please login first!');
+                window.location.href = 'LogIn.html';
+                return;
+            }
+
+            loginLink.style.display = 'none';
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="#" id="logout-btn">Hello, ${user.name} (Logout)</a>`;
+            nav.appendChild(li);
+
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                localStorage.removeItem('lux_user');
+                window.location.reload();
+            });
+
+            // ======= Cart Logic =======
+            const cartItemsContainer = document.getElementById('cart-items-container');
+            const subtotalEl = document.getElementById('subtotal');
+            const shippingEl = document.getElementById('shipping');
+            const totalEl = document.getElementById('total');
+
+            const cart = LuxeApp.state.cart || [];
+
+            function renderCart() {
+                cartCountEl.textContent = cart.reduce((sum, p) => sum + p.quantity, 0);
+
+                if (!cart.length) {
+                    cartItemsContainer.innerHTML = `
+                        <div class="empty-cart-message">
+                            <i class="fas fa-shopping-basket"></i>
+                            <p>Your cart is currently empty.</p>
+                            <a href="Products.html" class="btn-primary">Start Shopping</a>
+                        </div>`;
+                    subtotalEl.textContent = '$0.00';
+                    shippingEl.textContent = '$0.00';
+                    totalEl.textContent = '$0.00';
+                    return;
+                }
+
+                cartItemsContainer.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="cart-item-info">
+                            <h3>${item.name}</h3>
+                            <p>Price: $${item.price.toFixed(2)}</p>
+                            <div class="quantity-control">
+                                <button class="qty-btn" data-id="${item.id}" data-action="decrease">-</button>
+                                <input type="number" value="${item.quantity}" min="1" data-id="${item.id}" class="qty-input">
+                                <button class="qty-btn" data-id="${item.id}" data-action="increase">+</button>
+                            </div>
+                            <button class="remove-btn" data-id="${item.id}">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                updateSummary();
+                attachEvents();
+            }
+
+            function updateSummary() {
+                const subtotal = cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
+                const shipping = subtotal > 0 ? 10 : 0;
+                subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+                shippingEl.textContent = `$${shipping.toFixed(2)}`;
+                totalEl.textContent = `$${(subtotal + shipping).toFixed(2)}`;
+            }
+
+            function attachEvents() {
+                document.querySelectorAll('.qty-btn').forEach(btn => {
+                    btn.onclick = () => {
+                        const id = parseInt(btn.dataset.id);
+                        const product = cart.find(p => p.id === id);
+                        if (!product) return;
+                        if (btn.dataset.action === 'increase') product.quantity++;
+                        if (btn.dataset.action === 'decrease' && product.quantity > 1) product.quantity--;
+                        renderCart();
+                    };
+                });
+
+                document.querySelectorAll('.qty-input').forEach(input => {
+                    input.onchange = () => {
+                        const id = parseInt(input.dataset.id);
+                        const product = cart.find(p => p.id === id);
+                        if (!product) return;
+                        const val = parseInt(input.value);
+                        if (val > 0) product.quantity = val;
+                        else input.value = product.quantity;
+                        renderCart();
+                    };
+                });
+
+                document.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.onclick = () => {
+                        const id = parseInt(btn.dataset.id);
+                        const index = cart.findIndex(p => p.id === id);
+                        if (index > -1) {
+                            cart.splice(index, 1);
+                            renderCart();
+                        }
+                    };
+                });
+            }
+
+            document.querySelector('.clear-cart-btn').onclick = () => {
+                cart.length = 0;
+                renderCart();
+            };
+
+            document.getElementById('checkout-btn').onclick = () => {
+                if (!cart.length) {
+                    alert('Your cart is empty. Add at least one product to proceed.');
+                    return;
+                }
+                window.location.href = 'Checkout.html';
+            };
+
+            renderCart();
+        });
+    </script>
+
+</body>
+</html>
